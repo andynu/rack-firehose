@@ -7,14 +7,11 @@ module Rack
   class Firehose
     # @param [Object] app rack application to wrap
     # @param [Hash] options
-    # @option options [Boolean] :allow_puts Allow PUT requests to publish content. Default false.
     def initialize(app, options = {})
-      @options = {
-        :allow_puts => false
-      }.merge(options)
+      @options = {}.merge(options)
 
       @rack     = app
-      @firehose = @options[:allow_puts] ? ::Firehose::Rack::App.new : ::Firehose::Rack::ConsumerApp.new
+      @firehose = ::Firehose::Rack::App.new
       @app      = Rack::Cascade.new [@rack, @firehose]
 
       # sinatra doesn't work with #extend
